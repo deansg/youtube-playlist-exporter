@@ -28,7 +28,7 @@ def main(playlist_id: Annotated[str, typer.Argument(help="The YouTube id of the 
 
 async def _run(options: Options):
     async with aiohttp.ClientSession() as session:
-        await YouTubePlaylistExporter(session).export_playlist(options)
+        await YouTubePlaylistExporter(session, options).export_playlist()
 
 
 if __name__ == "__main__":
