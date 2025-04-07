@@ -5,10 +5,12 @@ import aiohttp
 import typer
 from typing_extensions import Annotated
 
-from exporter import YouTubePlaylistExporter
-from options import Options
+from app.exporter import YouTubePlaylistExporter
+from app.options import Options
 
+app = typer.Typer()
 
+@app.command()
 def main(playlist_id: Annotated[str, typer.Option(help="The YouTube id of the playlist to export")],
          youtube_auth_key: Annotated[str, typer.Option(
              help="The API key provided by YouTube",
@@ -32,4 +34,4 @@ async def _run(options: Options):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

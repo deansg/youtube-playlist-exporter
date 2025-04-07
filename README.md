@@ -8,7 +8,8 @@ Fear not! For this CLI will have you covered
 
 ## TODOs
 
-1. Export as proper package with installation etc.
-2. Export CSV with additional details (video ID, channel that uploaded etc.)
-3. Compare files based on video IDs?
-4. Add additional backup mechanisms? GIT backup?
+1. Tests in CI
+2. Export as proper package with installation etc.
+3. Export CSV with additional details (video ID, channel that uploaded etc.)
+4. Compare files based on video IDs?
+5. Add additional backup mechanisms? GIT backup?

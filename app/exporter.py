@@ -3,9 +3,9 @@ import shutil
 
 from aiohttp import ClientSession
 
-import utils
-from options import Options
-from retriever import PlaylistDataRetriever
+from app import utils
+from app.options import Options
+from app.retriever import PlaylistDataRetriever
 
 
 class YouTubePlaylistExporter:
@@ -51,7 +51,7 @@ class YouTubePlaylistExporter:
     @staticmethod
     def _get_data_from_file(file_path: str) -> list[str]:
         with open(file_path, encoding="utf-8") as f:
-            return [line[line.index(".") + 2:] for line in f]
+            return [line[line.index(".") + 2:].strip() for line in f]
 
     def _calc_and_validate_length_diff(self, new_titles: list[str], prev_titles: list[str]):
         utils.log("Validating new titles and calculating diffs")
