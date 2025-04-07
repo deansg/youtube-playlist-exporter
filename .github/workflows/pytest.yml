@@ -23,12 +23,9 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
 
-#      - name: Set up Python
-#        run: uv python install
-
       - name: Install the project
         run: uv sync --all-extras --dev
 
       - name: Run tests
-        # For example, using `pytest`
-        run: cd tests & uv run pytest tests
+        working-directory: ./tests
+        run: uv run pytest tests
