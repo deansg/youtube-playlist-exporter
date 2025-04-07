@@ -4,4 +4,4 @@ import typer
 
 
 def log(msg: str):
-    typer.echo(f"{datetime.now().isoformat(): {msg}}")
+    typer.echo(f"{datetime.now().isoformat()}: {msg}")

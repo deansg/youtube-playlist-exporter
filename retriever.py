@@ -36,5 +36,5 @@ class PlaylistDataRetriever:
             return await response.json()
 
     def _get_req_url(self):
-        next_page_part = "" if self._next_page == "" else f"&pageToken{self._next_page}"
+        next_page_part = "" if self._next_page == "" else f"&pageToken={self._next_page}"
         return f"{PLAYLIST_API}?part=snippet&maxResults=50&playlistId={self._playlist_id}&key={self._auth_key}{next_page_part}"

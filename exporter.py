@@ -50,7 +50,7 @@ class YouTubePlaylistExporter:
 
     @staticmethod
     def _get_data_from_file(file_path: str) -> list[str]:
-        with open(file_path) as f:
+        with open(file_path, encoding="utf-8") as f:
             return [line[line.index(".") + 2:] for line in f]
 
     def _calc_and_validate_length_diff(self, new_titles: list[str], prev_titles: list[str]):
@@ -80,12 +80,12 @@ class YouTubePlaylistExporter:
 
     def _write_new_titles(self, new_data: list[str]):
         utils.log(f"Writing new {self._options.playlist_name} titles to file")
-        with open(self._new_version_path, "w") as f:
+        with open(self._new_version_path, "w", encoding="utf-8") as f:
             f.writelines([f"{i + 1}. {new_data[i]}\n" for i in range(len(new_data))])
 
     def _write_diff_file(self, new_data: list[str], prev_data: list[str], length_diff: int):
         utils.log("Writing diff file")
-        with open(self._diff_file_path, "w") as f:
+        with open(self._diff_file_path, "w", encoding="utf-8") as f:
             if self._options.are_new_videos_last:
                 for i in range(len(prev_data)):
                     prev_title = prev_data[i]
