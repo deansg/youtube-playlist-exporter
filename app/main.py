@@ -5,10 +5,11 @@ import aiohttp
 import typer
 from typing_extensions import Annotated
 
-from app.exporter import YouTubePlaylistExporter
-from app.options import Options
+from exporter import YouTubePlaylistExporter
+from options import Options
 
 app = typer.Typer()
+
 
 @app.command()
 def main(playlist_id: Annotated[str, typer.Option(help="The YouTube id of the playlist to export")],
@@ -27,6 +28,7 @@ def main(playlist_id: Annotated[str, typer.Option(help="The YouTube id of the pl
                              output_dir=output_dir,
                              playlist_name=playlist_name,
                              are_new_videos_last=not new_videos_first)))
+
 
 async def _run(options: Options):
     async with aiohttp.ClientSession() as session:

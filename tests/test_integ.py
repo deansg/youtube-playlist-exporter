@@ -55,8 +55,8 @@ def tempdir():
 
 
 def test_empty_directory(tempdir: str, mock_api_calls, playlist_id: str, playlist_name: str, auth_key: str):
-    diff_file = f"{playlist_name}YoutubeBackupDiff.txt"
-    data_file = f"{playlist_name}YoutubeBackupNew.txt"
+    diff_file = f"{playlist_name}-YoutubeBackupDiff.txt"
+    data_file = f"{playlist_name}-YoutubeBackupNew.txt"
 
     result = _run_cli(playlist_id, playlist_name, auth_key, tempdir)
 
@@ -70,17 +70,19 @@ def test_empty_directory(tempdir: str, mock_api_calls, playlist_id: str, playlis
 
 
 def test_existing_directory(tempdir: str, mock_api_calls, playlist_id: str, playlist_name: str, auth_key: str):
-    diff_file = f"{playlist_name}YoutubeBackupDiff.txt"
-    data_file = f"{playlist_name}YoutubeBackupNew.txt"
-    diff_file_backup = f"{playlist_name}YoutubeBackupDiffOld.txt"
-    data_file_backup = f"{playlist_name}YoutubeBackup.txt"
+    diff_file = f"{playlist_name}-YoutubeBackupDiff.txt"
+    data_file = f"{playlist_name}-YoutubeBackupNew.txt"
+    diff_file_backup = f"{playlist_name}-YoutubeBackupDiffOld.txt"
+    data_file_backup = f"{playlist_name}-YoutubeBackup.txt"
     open(os.path.join(tempdir, diff_file), "w", encoding="utf-8").close()
-    changed_title = "TEST - CHANGED - TITLE"
+    changed_title_1 = "TEST - CHANGED - TITLE"
+    changed_title_2 = "TEST - CHANGED - TITLE - 2"
     with open(os.path.join(tempdir, data_file), "w", encoding="utf-8") as f:
         f.writelines([
-            "1. Mediterranean Sundance germany '81\n",
-            f"2. {changed_title}\n",
-            "3. Douchebags! Douchebags! Douchebags! (3/7/08)\n",
+            f"1. {changed_title_2}\n",
+            f"2. Mediterranean Sundance germany '81\n",
+            f"3. {changed_title_1}\n",
+            f"4. Douchebags! Douchebags! Douchebags! (3/7/08)\n",
         ])
 
     result = _run_cli(playlist_id, playlist_name, auth_key, tempdir)
@@ -91,7 +93,8 @@ def test_existing_directory(tempdir: str, mock_api_calls, playlist_id: str, play
     assert files == sorted([diff_file, data_file, data_file_backup, diff_file_backup])
     diff = _read_file_lines(os.path.join(tempdir, diff_file))
     assert diff == [
-        f"128. Old: {changed_title}. New: Every dog has its day"
+        f"128. Old: {changed_title_1}. New: Every dog has its day\n",
+        f"126. Old: {changed_title_2}. New: Pantera Floods (live)\n"
     ]
     data = _read_file_lines(os.path.join(tempdir, data_file))
     assert len(data) == 129

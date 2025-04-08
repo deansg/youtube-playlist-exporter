@@ -3,9 +3,9 @@ import shutil
 
 from aiohttp import ClientSession
 
-from app import utils
-from app.options import Options
-from app.retriever import PlaylistDataRetriever
+import utils
+from options import Options
+from retriever import PlaylistDataRetriever
 
 
 class YouTubePlaylistExporter:
@@ -28,7 +28,7 @@ class YouTubePlaylistExporter:
         # TODO more validations?
 
     def _get_path(self, suffix: str):
-        return f"{os.path.join(self._options.output_dir, self._options.playlist_name)}{suffix}.txt"
+        return f"{os.path.join(self._options.output_dir, self._options.playlist_name)}-{suffix}.txt"
 
     async def export_playlist(self):
         new_data: list[str] = await PlaylistDataRetriever(self._session,
@@ -65,7 +65,7 @@ class YouTubePlaylistExporter:
         with open(self._missing_videos_path, "w", encoding="utf-8") as f:
             for i in range(len(prev_titles)):
                 if not prev_titles[i] in new_titles:
-                    f.write(f"{i + 1}. {prev_titles[i]}")
+                    f.write(f"{i + 1}. {prev_titles[i]}\n")
 
     def _write_backup(self):
         utils.log("Creating backups")
@@ -91,10 +91,10 @@ class YouTubePlaylistExporter:
                     prev_title = prev_data[i]
                     new_title = new_data[i]
                     if prev_title != new_title:
-                        f.write(f"{i + 1}. Old: {prev_title}. New: {new_title}")
+                        f.write(f"{i + 1}. Old: {prev_title}. New: {new_title}\n")
             else:
                 for i in range(len(prev_data) - 1, -1, -1):
                     prev_title = prev_data[i]
                     new_title = new_data[i + length_diff]
                     if prev_title != new_title:
-                        f.write(f"{i + 1 + length_diff}. Old: {prev_title}. New: {new_title}")
+                        f.write(f"{i + 1 + length_diff}. Old: {prev_title}. New: {new_title}\n")
