@@ -1,8 +1,9 @@
 import asyncio
-import typing
 
 import typer
 from aiohttp import ClientSession
+
+from app.apimodels import APIResponse
 
 PLAYLIST_API = "https://www.googleapis.com/youtube/v3/playlistItems/"
 
@@ -18,21 +19,23 @@ class PlaylistDataRetriever:
     async def retrieve(self) -> list[str]:
         while True:
             resp = await self._send_bulk_request()
-            self._next_page = resp.get("nextPageToken")
-            self._titles += [item["snippet"]["title"] for item in resp["items"]]
+            self._next_page = resp.next_page_token
+            self._titles += [item.snippet.title for item in resp.items]
             typer.echo(f"\rRetrieved data about {len(self._titles)} videos", nl=False)
             if not self._next_page:
                 typer.echo()
                 return self._titles
             await asyncio.sleep(0.2)  # Without sleep sometimes irregularities in the API response pop up
 
-    async def _send_bulk_request(self) -> dict[str, typing.Any]:
+    async def _send_bulk_request(self) -> APIResponse:
         req_url = self._get_req_url()
         async with self._session.get(req_url) as response:
             if response.status != 200:
                 raise Exception(f"Received non 200 code from YouTube API: {response.status}")
 
-            return await response.json()
+            raw_resp = await response.json()
+            # noinspection PyUnresolvedReferences
+            return APIResponse.from_dict(raw_resp)
 
     def _get_req_url(self):
         next_page_part = "" if self._next_page == "" else f"&pageToken={self._next_page}"
