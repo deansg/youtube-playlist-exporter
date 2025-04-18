@@ -1,19 +1,21 @@
+import abc
 import os.path
 import shutil
 
-from aiohttp import ClientSession
-
 from app.apimodels import PlaylistItem
-from app import utils
 from app.options import Options
-from app.retriever import PlaylistDataRetriever
+from app import utils
 
 
-class YouTubePlaylistExporter:
-    def __init__(self, session: ClientSession, options: Options):
-        self._session: ClientSession = session
+class Exporter(abc.ABC):
+    @abc.abstractmethod
+    def export(self, new_items: list[PlaylistItem]) -> None:
+        raise NotImplementedError()
+
+
+class TitlesExporter(Exporter):
+    def __init__(self, options: Options):
         self._options: Options = options
-        self._validate_input()
         self._new_version_path = self._get_path("YoutubeBackupNew")
         self._old_version_path = self._get_path("YoutubeBackup")
         self._diff_file_path = self._get_path("YoutubeBackupDiff")
@@ -21,20 +23,10 @@ class YouTubePlaylistExporter:
         self._old_version_backup_path = self._get_path("YoutubeBackupOld")
         self._missing_videos_path = self._get_path("YoutubeMissingVideos")
 
-    def _validate_input(self):
-        if not os.path.isdir(self._options.output_dir):
-            raise Exception(f"Supplied output folder {self._options.output_dir} doesn't exist")
-        if not self._options.playlist_id:
-            raise Exception("Must provide a non-empty playlist ID")
-        # TODO more validations?
-
     def _get_path(self, suffix: str):
         return f"{os.path.join(self._options.output_dir, self._options.playlist_name)}-{suffix}.txt"
 
-    async def export_playlist(self):
-        new_items: list[PlaylistItem] = await PlaylistDataRetriever(self._session,
-                                                                   self._options.playlist_id,
-                                                                   self._options.youtube_auth_key).retrieve()
+    def export(self, new_items: list[PlaylistItem]) -> None:
         prev_titles: list[str] = self._get_latest_backup_data()
         length_diff: int = self._calc_and_validate_length_diff(new_items, prev_titles)
         self._write_backup()

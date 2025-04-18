@@ -5,7 +5,7 @@ import aiohttp
 import typer
 from typing_extensions import Annotated
 
-from app.exporter import YouTubePlaylistExporter
+from app.exportmanager import YouTubePlaylistExportManager
 from app.options import Options
 
 app = typer.Typer()
@@ -32,7 +32,7 @@ def main(playlist_id: Annotated[str, typer.Option(help="The YouTube id of the pl
 
 async def _run(options: Options):
     async with aiohttp.ClientSession() as session:
-        await YouTubePlaylistExporter(session, options).export_playlist()
+        await YouTubePlaylistExportManager(session, options).export_playlist()
 
 
 if __name__ == "__main__":
