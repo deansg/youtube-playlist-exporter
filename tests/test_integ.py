@@ -99,8 +99,45 @@ def test_existing_directory(tempdir: str, mock_api_calls, playlist_id: str, play
     data = _read_file_lines(os.path.join(tempdir, data_file))
     assert len(data) == 129
 
+def test_existing_directory_csv(tempdir: str, mock_api_calls, playlist_id: str, playlist_name: str, auth_key: str):
+    diff_file = f"YouTube-{playlist_name}-diff.csv"
+    data_file = f"YouTube-{playlist_name}-items.csv"
+    missing_file = f"YouTube-{playlist_name}-missing-videos.csv"
+    diff_file_backup = f"YouTube-{playlist_name}-diff-backup.csv"
+    data_file_backup = f"YouTube-{playlist_name}-items-backup.csv"
+    open(os.path.join(tempdir, diff_file), "w", encoding="utf-8").close()
+    changed_title_1 = "TEST - CHANGED - TITLE"
+    changed_title_2 = "TEST - CHANGED - TITLE - 2"
+    missing_item = "3,TEST_MISSING_ID,2020-01-01,TEST_MISSING_TITLE,MISSING_CHANNEL_TITLE,MISSING_CHANNEL_ID\n"
+    with open(os.path.join(tempdir, data_file), "w", encoding="utf-8") as f:
+        f.writelines([
+            "position,id,published_at,title,channel_title,channel_id\n"
+            f"1,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjhENTkwNkRFOUQzOEY4MDA,2020-01-01,{changed_title_2},test_channel_title,test_channel_id\n",
+            f"2,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjhGNDg3NkE4NjY1NEU1MTg,2020-01-01,Mediterranean Sundance germany '81,test_channel_title,test_channel_id\n",
+            missing_item,
+            f"4,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjk5M0I3QkVGOUIyOTI2NjE,2020-01-01,{changed_title_1},test_channel_title,test_channel_id\n",
+            f"5,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjBGMDhBNjIyRUE0NzVCMTc,2020-01-01,Douchebags! Douchebags! Douchebags! (3/7/08),test_channel_title,test_channel_id\n",
+        ])
 
-def _run_cli(playlist_id: str, playlist_name: str, auth_key: str, tempdir: str) -> Result:
+    result = _run_cli(playlist_id, playlist_name, auth_key, tempdir, "--csv-output")
+
+    assert result.exit_code == 0, f"Got bad exit code.\nException is {result.exception}\nExc info: {result.exc_info}"
+    files = sorted(os.listdir(tempdir))
+    assert files == sorted([diff_file, data_file, data_file_backup, diff_file_backup, missing_file])
+    diff = _read_file_lines(os.path.join(tempdir, diff_file))
+    assert diff == [
+        "position,current_title,previous_title,channel_title\n",
+        f"126,Pantera Floods (live),{changed_title_2},introvertednightmare\n",
+        f"128,Every dog has its day,{changed_title_1},ariel179\n",
+    ]
+    data = _read_file_lines(os.path.join(tempdir, data_file))
+    assert len(data) == 130
+    missing = _read_file_lines(os.path.join(tempdir, missing_file))
+    assert len(missing) == 2
+    assert missing[-1] == missing_item
+
+
+def _run_cli(playlist_id: str, playlist_name: str, auth_key: str, tempdir: str, *args) -> Result:
     return runner.invoke(app, [
         "--playlist-id",
         playlist_id,
@@ -111,7 +148,7 @@ def _run_cli(playlist_id: str, playlist_name: str, auth_key: str, tempdir: str) 
         "--output-dir",
         tempdir,
         "--new-videos-first"
-    ])
+    ] + list(args))
 
 
 def _read_test_resource(name: str) -> str:

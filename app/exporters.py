@@ -137,9 +137,10 @@ class CSVExporter(Exporter):
         prev_items: list[_CSVPlaylistItem] = self._get_latest_backup_data()
         self._write_backup()
         self._override_old_files()
-        converted_new_items = [self._to_csv_item(item, idx) for idx, item in enumerate(new_items)]
+        converted_new_items = [self._to_csv_item(item, idx + 1) for idx, item in enumerate(new_items)]
         self._write_new_data(converted_new_items)
         self._write_diff_file(converted_new_items, prev_items)
+        self._write_missing_videos_file(converted_new_items, prev_items)
 
     def _get_latest_backup_data(self) -> list[_CSVPlaylistItem]:
         utils.log(f"Retrieving old {self._options.playlist_name} data")
@@ -169,8 +170,8 @@ class CSVExporter(Exporter):
             shutil.copyfile(self._new_version_path, self._old_version_path)
 
     @staticmethod
-    def _to_csv_item(item: PlaylistItem, idx: int) -> _CSVPlaylistItem:
-        return _CSVPlaylistItem(position=idx,
+    def _to_csv_item(item: PlaylistItem, position: int) -> _CSVPlaylistItem:
+        return _CSVPlaylistItem(position=position,
                                 id=item.id,
                                 published_at=item.snippet.published_at,
                                 title=item.snippet.title,
@@ -182,7 +183,7 @@ class CSVExporter(Exporter):
         utils.log(f"Writing new {self._options.playlist_name} titles to file")
         with open(self._new_version_path, "w", encoding="utf-8", newline='') as f:
             # noinspection PyUnresolvedReferences
-            writer = self._dict_writer(f)
+            writer = self._dict_writer(f, _CSVPlaylistItem)
             for item in items:
                 # noinspection PyUnresolvedReferences
                 writer.writerow(item.to_dict())
@@ -192,8 +193,7 @@ class CSVExporter(Exporter):
         prev_item_id_to_item: dict[str, _CSVPlaylistItem] = {item.id: item for item in prev_items}
         with open(self._diff_file_path, "w", encoding="utf-8", newline='') as f:
             # noinspection PyTypeChecker
-            diff_writer = csv.DictWriter(f, fieldnames=[])
-            diff_writer.writeheader()
+            diff_writer = self._dict_writer(f, _CSVDiffItem)
             for i in range(len(new_items)):
                 cur_item = new_items[i]
                 prev_item = prev_item_id_to_item.get(cur_item.id)
@@ -208,15 +208,15 @@ class CSVExporter(Exporter):
         utils.log("Writing missing videos file")
         cur_item_ids: set[str] = {item.id for item in new_items}
         with open(self._missing_videos_path, "w", encoding="utf-8", newline='') as f:
-            missing_writer = self._dict_writer(f)
+            missing_writer = self._dict_writer(f, _CSVPlaylistItem)
             for prev_item in prev_items:
                 if prev_item.id not in cur_item_ids:
                     # noinspection PyUnresolvedReferences
                     missing_writer.writerow(prev_item.to_dict())
 
     @staticmethod
-    def _dict_writer(f):
+    def _dict_writer(f, clazz):
         # noinspection PyTypeChecker
-        writer = csv.DictWriter(f, [field.name for field in dataclasses.fields(_CSVPlaylistItem)])
+        writer = csv.DictWriter(f, [field.name for field in dataclasses.fields(clazz)])
         writer.writeheader()
         return writer
