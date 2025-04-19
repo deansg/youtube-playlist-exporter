@@ -3,10 +3,9 @@ import os.path
 from aiohttp import ClientSession
 
 from app.apimodels import PlaylistItem
-from app.exporters import TitlesExporter, Exporter
+from app.exporters import CSVExporter, TitlesExporter, Exporter
 from app.options import Options
 from app.retriever import PlaylistDataRetriever
-from exporters import CSVExporter
 
 
 class YouTubePlaylistExportManager:
