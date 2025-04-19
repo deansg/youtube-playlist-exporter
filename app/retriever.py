@@ -3,8 +3,7 @@ import asyncio
 import typer
 from aiohttp import ClientSession
 
-from app.apimodels import PlaylistItem
-from app.apimodels import APIResponse
+from app.apimodels import PlaylistItem, APIResponse
 
 PLAYLIST_API = "https://www.googleapis.com/youtube/v3/playlistItems/"
 

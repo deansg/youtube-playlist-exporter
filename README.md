@@ -13,7 +13,7 @@ videos from the playlist become private/get deleted.
 
 This CLI is published to [PyPI](https://pypi.org/project/youtube-playlist-exporter/) and can be installed with pip using:
 
-`pip install youtube-playlist-exporter==0.1.0`
+`pip install youtube-playlist-exporter`
 
 ## Usage
 
@@ -30,6 +30,5 @@ them is by navigating to the playlist's main YouTube page, and copying the text 
 
 ## TODOs
 
-1. Allow exporting a CSV with additional details (video ID, channel that uploaded etc.) instead of just the video titles
-2. Compare files based on video IDs?
-3. Add additional backup mechanisms? GIT backup?
+1. Add documentation for CSV flag
+2. Add additional backup mechanisms? GIT backup?

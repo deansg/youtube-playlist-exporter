@@ -8,3 +8,4 @@ class Options:
     output_dir: str
     playlist_name: str
     are_new_videos_last: bool
+    csv_output: bool
