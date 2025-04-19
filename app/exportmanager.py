@@ -6,6 +6,7 @@ from app.apimodels import PlaylistItem
 from app.exporters import TitlesExporter, Exporter
 from app.options import Options
 from app.retriever import PlaylistDataRetriever
+from exporters import CSVExporter
 
 
 class YouTubePlaylistExportManager:
@@ -13,7 +14,7 @@ class YouTubePlaylistExportManager:
         self._session: ClientSession = session
         self._options: Options = options
         self._validate_input()
-        self._exporter: Exporter = TitlesExporter(options)
+        self._exporter: Exporter = CSVExporter(options) if options.csv_output else TitlesExporter(options)
 
     def _validate_input(self):
         if not os.path.isdir(self._options.output_dir):
@@ -29,4 +30,6 @@ class YouTubePlaylistExportManager:
         new_items: list[PlaylistItem] = await PlaylistDataRetriever(self._session,
                                                                    self._options.playlist_id,
                                                                    self._options.youtube_auth_key).retrieve()
+        if not new_items:
+            raise Exception("Given playlist is empty")
         self._exporter.export(new_items)
