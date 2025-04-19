@@ -182,7 +182,6 @@ class CSVExporter(Exporter):
     def _write_new_data(self, items: list[_CSVPlaylistItem]):
         utils.log(f"Writing new {self._options.playlist_name} titles to file")
         with open(self._new_version_path, "w", encoding="utf-8", newline='') as f:
-            # noinspection PyUnresolvedReferences
             writer = self._dict_writer(f, _CSVPlaylistItem)
             for item in items:
                 # noinspection PyUnresolvedReferences
@@ -216,7 +215,6 @@ class CSVExporter(Exporter):
 
     @staticmethod
     def _dict_writer(f, clazz):
-        # noinspection PyTypeChecker
         writer = csv.DictWriter(f, [field.name for field in dataclasses.fields(clazz)])
         writer.writeheader()
         return writer
