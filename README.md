@@ -45,6 +45,23 @@ and can be installed with pip using:
     * `YouTube-<PLAYLIST_NAME>-missing-videos-backup.csv`: if a `...missing-videos.csv` file existed in the output
       directory before running the script, this file will contain a backup for it
 
+## FAQ
+
+### How do I raise issues with the project?
+
+You can either open issues on the GitHub project or email deansg@gmail.com
+
+### What do I do if I want to recover videos that are already private/deleted before I started using the tool?
+
+In that case you need to retrieve the URLs of the problematic videos, and can then try to use either Google them to see
+if their titles appear in the search results, or use Wayback Machine.
+
+### Is there a way to use the tool without having Python installed?
+
+Currently, the tool can be run / installed only on machines that have Python. If you have ideas for other ways to
+distribute it that may be beneficial to others please let me know!
+
 ## TODOs
 
 1. Add additional backup mechanisms? GIT backup?
+2. Publish as Homebrew formula?
