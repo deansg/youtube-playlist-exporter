@@ -54,11 +54,11 @@ def tempdir():
         yield tempdir
 
 
-def test_empty_directory(tempdir: str, mock_api_calls, playlist_id: str, playlist_name: str, auth_key: str):
+def test_empty_directory_only_titles(tempdir: str, mock_api_calls, playlist_id: str, playlist_name: str, auth_key: str):
     diff_file = f"{playlist_name}-YoutubeBackupDiff.txt"
     data_file = f"{playlist_name}-YoutubeBackupNew.txt"
 
-    result = _run_cli(playlist_id, playlist_name, auth_key, tempdir)
+    result = _run_cli_only_titles(playlist_id, playlist_name, auth_key, tempdir)
 
     assert result.exit_code == 0
     files = sorted(os.listdir(tempdir))
@@ -69,7 +69,8 @@ def test_empty_directory(tempdir: str, mock_api_calls, playlist_id: str, playlis
     assert len(data) == 129
 
 
-def test_existing_directory(tempdir: str, mock_api_calls, playlist_id: str, playlist_name: str, auth_key: str):
+def test_existing_directory_only_titles(tempdir: str, mock_api_calls, playlist_id: str, playlist_name: str,
+                                        auth_key: str):
     diff_file = f"{playlist_name}-YoutubeBackupDiff.txt"
     data_file = f"{playlist_name}-YoutubeBackupNew.txt"
     diff_file_backup = f"{playlist_name}-YoutubeBackupDiffOld.txt"
@@ -85,7 +86,7 @@ def test_existing_directory(tempdir: str, mock_api_calls, playlist_id: str, play
             f"4. Douchebags! Douchebags! Douchebags! (3/7/08)\n",
         ])
 
-    result = _run_cli(playlist_id, playlist_name, auth_key, tempdir)
+    result = _run_cli_only_titles(playlist_id, playlist_name, auth_key, tempdir)
 
     assert result.exit_code == 0
     files = sorted(os.listdir(tempdir))
@@ -98,6 +99,7 @@ def test_existing_directory(tempdir: str, mock_api_calls, playlist_id: str, play
     ]
     data = _read_file_lines(os.path.join(tempdir, data_file))
     assert len(data) == 129
+
 
 def test_existing_directory_csv(tempdir: str, mock_api_calls, playlist_id: str, playlist_name: str, auth_key: str):
     diff_file = f"YouTube-{playlist_name}-diff.csv"
@@ -119,7 +121,7 @@ def test_existing_directory_csv(tempdir: str, mock_api_calls, playlist_id: str, 
             f"5,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjBGMDhBNjIyRUE0NzVCMTc,2020-01-01,Douchebags! Douchebags! Douchebags! (3/7/08),test_channel_title,test_channel_id\n",
         ])
 
-    result = _run_cli(playlist_id, playlist_name, auth_key, tempdir, "--csv-output")
+    result = _run_cli(playlist_id, playlist_name, auth_key, tempdir)
 
     assert result.exit_code == 0, f"Got bad exit code.\nException is {result.exception}\nExc info: {result.exc_info}"
     files = sorted(os.listdir(tempdir))
@@ -147,8 +149,11 @@ def _run_cli(playlist_id: str, playlist_name: str, auth_key: str, tempdir: str, 
         playlist_name,
         "--output-dir",
         tempdir,
-        "--new-videos-first"
     ] + list(args))
+
+
+def _run_cli_only_titles(playlist_id: str, playlist_name: str, auth_key: str, tempdir: str) -> Result:
+    return _run_cli(playlist_id, playlist_name, auth_key, tempdir, "--only-titles", "--new-videos-first")
 
 
 def _read_test_resource(name: str) -> str:

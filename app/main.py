@@ -20,18 +20,21 @@ def main(playlist_id: Annotated[str, typer.Option(help="The YouTube id of the pl
              default_factory=os.getcwd,
              help="The script's output directory (must be an existing directory!) [default: current working directory]")],
          playlist_name: Annotated[str | None, typer.Option(
-             help="The name of the playlist to back-up. Only used for generating the names of the output files [default: the playlist id]")] = None,
+             help="The name of the playlist to back-up. Only used for generating the names of the output files "
+                  "[default: the playlist id]")] = None,
+         only_titles: Annotated[bool, typer.Option(
+             help="Whether to export just the video titles instead of a full CSV")] = False,
          new_videos_first: Annotated[bool, typer.Option(
-             help="Whether new videos are added to the beginning of the playlist (in favorites' playlists they are added to the beginning, in other playlists to the end)")] = False,
-         csv_output: Annotated[bool, typer.Option(
-             help="Experimental")] = False,
+             help="Relevant only if --only-titles is specified: whether new videos are added to the beginning of the "
+                  "specified playlist "
+                  "(in favorites' playlists they are added to the beginning, in other playlists to the end)")] = False,
          ):
     asyncio.run(_run(Options(playlist_id=playlist_id,
                              youtube_auth_key=youtube_auth_key,
                              output_dir=output_dir,
                              playlist_name=playlist_name,
                              are_new_videos_last=not new_videos_first,
-                             csv_output=csv_output,
+                             csv_output=not only_titles,
                              )))
 
 
