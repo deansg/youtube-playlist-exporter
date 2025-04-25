@@ -4,7 +4,7 @@ Tired of videos disappearing from your YouTube playlists, without leaving you th
 
 Fear not! For this CLI will have you covered
 
-![alt text](memes/1.jpg)
+![alt text](memes/2.jpg)
 
 This CLI allows exporting data about videos in your playlist to local files, that can be used as a backup in case
 videos from the playlist become private/get deleted.
