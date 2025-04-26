@@ -22,7 +22,8 @@ and can be installed with pip using:
 ## Usage
 
 1. Get a YouTube API Key. To do so, you can follow the instructions
-   in [this guide](https://elfsight.com/help/how-to-get-youtube-api-key/) (**this only needs to be done once for all future CLI runs**)
+   in [this guide](https://elfsight.com/help/how-to-get-youtube-api-key/) (**this only needs to be done once for all
+   future CLI runs**)
 2. Retrieve the YouTube ID of the playlist you want to create a backup for. This can be done in several ways. One of
    them is by navigating to the playlist's main YouTube page, and copying the text after "...list=" in the URL
 3. If you didn't do so already, install the CLI (see [installation](#installation))
@@ -60,8 +61,3 @@ if their titles appear in the search results, or use Wayback Machine.
 
 Currently, the tool can be run / installed only on machines that have Python. If you have ideas for other ways to
 distribute it that may be beneficial to others please let me know!
-
-## TODOs
-
-1. Add additional backup mechanisms? GIT backup?
-2. Publish as Homebrew formula?
