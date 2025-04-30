@@ -50,7 +50,9 @@ and can be installed with pip using:
 
 ### [Advanced] Additional setup for exporting data from private playlists
 
-If your playlist is private, additional setup is required for the script to be able to export data from it:
+If your playlist is private, extra setup is required for the script to be able to export data from it. In addition,
+running the CLI to retrieve data from private playlists will open a browser window and require you to manually
+authenticate. The necessary extra steps are:
 
 1. Go to https://console.cloud.google.com/apis/dashboard (where)
 2. Click on "OAuth consent screen" on the sidebar to the left, and then go to "Clients"
@@ -58,7 +60,8 @@ If your playlist is private, additional setup is required for the script to be a
 4. Navigate to the created client, and click "Download JSON"
 5. When calling the CLI, you will need to specify the --private-playlist argument, and also provide the path of the
    downloaded file using the --secret-file argument
-6. Continue setup from previous section
+6. In the audience section, add your user as a test user
+7. Continue setup from previous section
 
 ## FAQ
 
