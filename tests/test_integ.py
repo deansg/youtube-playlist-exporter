@@ -114,11 +114,11 @@ def test_existing_directory_csv(tempdir: str, mock_api_calls, playlist_id: str, 
     with open(os.path.join(tempdir, data_file), "w", encoding="utf-8") as f:
         f.writelines([
             "position,id,published_at,title,channel_title,channel_id\n"
-            f"1,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjhENTkwNkRFOUQzOEY4MDA,2020-01-01,{changed_title_2},test_channel_title,test_channel_id\n",
-            f"2,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjhGNDg3NkE4NjY1NEU1MTg,2020-01-01,Mediterranean Sundance germany '81,test_channel_title,test_channel_id\n",
+            f"1,HTwA4mXJKsk,2020-01-01,{changed_title_2},test_channel_title,test_channel_id\n",
+            f"2,StHhwqZwIDs,2020-01-01,Mediterranean Sundance germany '81,test_channel_title,test_channel_id\n",
             missing_item,
-            f"4,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjk5M0I3QkVGOUIyOTI2NjE,2020-01-01,{changed_title_1},test_channel_title,test_channel_id\n",
-            f"5,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjBGMDhBNjIyRUE0NzVCMTc,2020-01-01,Douchebags! Douchebags! Douchebags! (3/7/08),test_channel_title,test_channel_id\n",
+            f"4,gLnt9RP48j4,2020-01-01,{changed_title_1},test_channel_title,test_channel_id\n",
+            f"5,A_kMvM0hWho,2020-01-01,Douchebags! Douchebags! Douchebags! (3/7/08),test_channel_title,test_channel_id\n",
         ])
 
     result = _run_cli(playlist_id, playlist_name, auth_key, tempdir)
