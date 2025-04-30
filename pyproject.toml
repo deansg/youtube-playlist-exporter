@@ -11,6 +11,7 @@ requires-python = ">=3.10"
 dependencies = [
     "aiohttp==3.11.16",
     "dataclasses-json>=0.6.7",
+    "google-auth-oauthlib>=1.2.2",
     "typer>=0.15.2",
 ]
 

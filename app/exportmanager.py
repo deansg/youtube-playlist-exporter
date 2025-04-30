@@ -26,9 +26,7 @@ class YouTubePlaylistExportManager:
         return f"{os.path.join(self._options.output_dir, self._options.playlist_name)}-{suffix}.txt"
 
     async def export_playlist(self):
-        new_items: list[PlaylistItem] = await PlaylistDataRetriever(self._session,
-                                                                   self._options.playlist_id,
-                                                                   self._options.youtube_auth_key).retrieve()
+        new_items: list[PlaylistItem] = await PlaylistDataRetriever(self._session, self._options).retrieve()
         if not new_items:
             raise Exception("Given playlist is empty")
         self._exporter.export(new_items)

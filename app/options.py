@@ -9,3 +9,5 @@ class Options:
     playlist_name: str
     are_new_videos_last: bool
     csv_output: bool
+    private_playlist: bool
+    secret_file: str

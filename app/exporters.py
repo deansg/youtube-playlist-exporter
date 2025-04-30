@@ -172,7 +172,7 @@ class CSVExporter(Exporter):
     @staticmethod
     def _to_csv_item(item: PlaylistItem, position: int) -> _CSVPlaylistItem:
         return _CSVPlaylistItem(position=position,
-                                id=item.id,
+                                id=item.snippet.resource_id.video_id,
                                 published_at=item.snippet.published_at,
                                 title=item.snippet.title,
                                 channel_id=item.snippet.video_owner_channel_id,
