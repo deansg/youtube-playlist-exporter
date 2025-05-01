@@ -1,6 +1,6 @@
 [project]
 name = "youtube-playlist-exporter"
-version = "0.2.0"
+version = "0.3.0"
 description = "A CLI for exporting YouTube playlists' data to local files"
 readme = "README.md"
 authors = [{ name = "Dean Gurvitz", email = "deansg@gmail.com" }]
