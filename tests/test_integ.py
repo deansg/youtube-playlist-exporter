@@ -6,7 +6,7 @@ from aioresponses import aioresponses
 from click.testing import Result
 from typer.testing import CliRunner
 
-import utils
+from app import utils
 from app.main import app
 
 runner = CliRunner()
