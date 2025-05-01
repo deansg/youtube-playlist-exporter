@@ -22,6 +22,10 @@ def main(playlist_id: Annotated[str, typer.Option(help="The YouTube id of the pl
          playlist_name: Annotated[str | None, typer.Option(
              help="The name of the playlist to back-up. Only used for generating the names of the output files "
                   "[default: the playlist id]")] = None,
+         private_playlist: Annotated[bool | None, typer.Option(
+             help="Is the playlist private")] = False,
+         secret_file: Annotated[str | None, typer.Option(
+             help="Needed only for private playlists: path of client's secret file, see README.md for more details")] = None,
          only_titles: Annotated[bool, typer.Option(
              help="Whether to export just the video titles instead of a full CSV")] = False,
          new_videos_first: Annotated[bool, typer.Option(
@@ -35,6 +39,8 @@ def main(playlist_id: Annotated[str, typer.Option(help="The YouTube id of the pl
                              playlist_name=playlist_name,
                              are_new_videos_last=not new_videos_first,
                              csv_output=not only_titles,
+                             private_playlist=private_playlist,
+                             secret_file=secret_file,
                              )))
 
 

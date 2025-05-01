@@ -20,15 +20,15 @@ class YouTubePlaylistExportManager:
             raise Exception(f"Supplied output folder {self._options.output_dir} doesn't exist")
         if not self._options.playlist_id:
             raise Exception("Must provide a non-empty playlist ID")
-        # TODO more validations?
+        if self._options.private_playlist and not self._options.secret_file:
+            raise Exception(
+                "A secret file containing the path API client's secret must be provided for private playlists")
 
     def _get_path(self, suffix: str):
         return f"{os.path.join(self._options.output_dir, self._options.playlist_name)}-{suffix}.txt"
 
     async def export_playlist(self):
-        new_items: list[PlaylistItem] = await PlaylistDataRetriever(self._session,
-                                                                   self._options.playlist_id,
-                                                                   self._options.youtube_auth_key).retrieve()
+        new_items: list[PlaylistItem] = await PlaylistDataRetriever(self._session, self._options).retrieve()
         if not new_items:
             raise Exception("Given playlist is empty")
         self._exporter.export(new_items)
