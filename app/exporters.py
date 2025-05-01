@@ -103,10 +103,10 @@ class TitlesExporter(Exporter):
 @dataclass
 class _CSVPlaylistItem:
     position: int
+    title: str
     id: str
     url: str
     published_at: str
-    title: str
     channel_title: str | None
     channel_id: str | None
 
@@ -118,6 +118,7 @@ class _CSVDiffItem:
     current_title: str
     previous_title: str
     channel_title: str
+    url: str
 
 
 class CSVExporter(Exporter):
@@ -175,7 +176,7 @@ class CSVExporter(Exporter):
         video_id = item.snippet.resource_id.video_id
         return _CSVPlaylistItem(position=position,
                                 id=video_id,
-                                url=f"https://www.youtube.com/watch?v={video_id}",
+                                url=utils.get_url(video_id),
                                 published_at=item.snippet.published_at,
                                 title=item.snippet.title,
                                 channel_id=item.snippet.video_owner_channel_id,
@@ -204,7 +205,8 @@ class CSVExporter(Exporter):
                     diff_writer.writerow(_CSVDiffItem(position=cur_item.position,
                                                       current_title=cur_item.title,
                                                       previous_title=prev_item.title,
-                                                      channel_title=cur_item.channel_title).to_dict())
+                                                      channel_title=cur_item.channel_title,
+                                                      url=cur_item.url).to_dict())
 
     def _write_missing_videos_file(self, new_items: list[_CSVPlaylistItem], prev_items: list[_CSVPlaylistItem]):
         utils.log("Writing missing videos file")
