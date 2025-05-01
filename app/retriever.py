@@ -39,8 +39,12 @@ class PlaylistDataRetriever:
     async def _send_bulk_request(self) -> APIResponse:
         req_url = self._get_req_url()
         async with self._session.get(req_url) as response:
+            if response.status == 404:
+                raise Exception(f"Received a 404 (NOT FOUND) status code from the YouTube API. Please make sure that "
+                                f"the provided playlist ID is correct. Also, if the playlist is private, make sure"
+                                f"to pass the --private-playlist and --secret-file flags")
             if response.status != 200:
-                raise Exception(f"Received non 200 code from YouTube API: {response.status}")
+                raise Exception(f"Received an unexpected non 200 code from YouTube API: {response.status}")
 
             raw_resp = await response.json()
             # noinspection PyUnresolvedReferences

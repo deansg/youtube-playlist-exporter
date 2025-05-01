@@ -58,8 +58,8 @@ authenticate. The necessary extra steps are:
 2. Click on "OAuth consent screen" on the sidebar to the left, and then go to "Clients"
 3. Create a new client for OAuth2 access with the type field set to "Desktop"
 4. Navigate to the created client, and click "Download JSON"
-5. When calling the CLI, you will need to specify the --private-playlist argument, and also provide the path of the
-   downloaded file using the --secret-file argument
+5. When calling the CLI, you will need to specify the `--private-playlist` argument, and also provide the path of the
+   downloaded file using the `--secret-file` argument
 6. In the audience section, add your user as a test user
 7. Continue setup from previous section
 
