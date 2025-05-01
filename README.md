@@ -71,8 +71,9 @@ You can either open issues on the GitHub project or email deansg@gmail.com
 
 ### What do I do if I want to recover videos that are already private/deleted before I started using the tool?
 
-In that case you need to retrieve the URLs of the problematic videos, and can then try to use either Google them to see
-if their titles appear in the search results, or use Wayback Machine.
+In that case you need to retrieve the URLs of the problematic videos (are also exported in the CSV), and can then use
+the [Wayback Machine](https://web.archive.org/) to see if it was archived before becoming unavailable. If you do find
+it, try to look for another version of the video on YouTube!
 
 ### Is there a way to use the tool without having Python installed?
 
