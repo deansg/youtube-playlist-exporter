@@ -6,6 +6,7 @@ from aioresponses import aioresponses
 from click.testing import Result
 from typer.testing import CliRunner
 
+from app import utils
 from app.main import app
 
 runner = CliRunner()
@@ -110,15 +111,15 @@ def test_existing_directory_csv(tempdir: str, mock_api_calls, playlist_id: str, 
     open(os.path.join(tempdir, diff_file), "w", encoding="utf-8").close()
     changed_title_1 = "TEST - CHANGED - TITLE"
     changed_title_2 = "TEST - CHANGED - TITLE - 2"
-    missing_item = "3,TEST_MISSING_ID,2020-01-01,TEST_MISSING_TITLE,MISSING_CHANNEL_TITLE,MISSING_CHANNEL_ID\n"
+    missing_item = f"3,TEST_MISSING_TITLE,TEST_MISSING_ID,{utils.get_url("TEST_MISSING_ID")},2020-01-01,MISSING_CHANNEL_TITLE,MISSING_CHANNEL_ID\n"
     with open(os.path.join(tempdir, data_file), "w", encoding="utf-8") as f:
         f.writelines([
-            "position,id,published_at,title,channel_title,channel_id\n"
-            f"1,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjhENTkwNkRFOUQzOEY4MDA,2020-01-01,{changed_title_2},test_channel_title,test_channel_id\n",
-            f"2,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjhGNDg3NkE4NjY1NEU1MTg,2020-01-01,Mediterranean Sundance germany '81,test_channel_title,test_channel_id\n",
+            "position,title,id,url,published_at,channel_title,channel_id\n"
+            f"1,{changed_title_2},HTwA4mXJKsk,{utils.get_url("HTwA4mXJKsk")},2020-01-01,test_channel_title,test_channel_id\n",
+            f"2,Mediterranean Sundance germany '81,StHhwqZwIDs,{utils.get_url("StHhwqZwIDs")},2020-01-01,test_channel_title,test_channel_id\n",
             missing_item,
-            f"4,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjk5M0I3QkVGOUIyOTI2NjE,2020-01-01,{changed_title_1},test_channel_title,test_channel_id\n",
-            f"5,Rkw4c2RoenVlY05kRXRsX3ZwWjFfOVVBLjBGMDhBNjIyRUE0NzVCMTc,2020-01-01,Douchebags! Douchebags! Douchebags! (3/7/08),test_channel_title,test_channel_id\n",
+            f"4,{changed_title_1},gLnt9RP48j4,{utils.get_url("gLnt9RP48j4")},2020-01-01,test_channel_title,test_channel_id\n",
+            f"5,Douchebags! Douchebags! Douchebags! (3/7/08),A_kMvM0hWho,{utils.get_url("A_kMvM0hWho")},2020-01-01,test_channel_title,test_channel_id\n",
         ])
 
     result = _run_cli(playlist_id, playlist_name, auth_key, tempdir)
@@ -128,9 +129,9 @@ def test_existing_directory_csv(tempdir: str, mock_api_calls, playlist_id: str, 
     assert files == sorted([diff_file, data_file, data_file_backup, diff_file_backup, missing_file])
     diff = _read_file_lines(os.path.join(tempdir, diff_file))
     assert diff == [
-        "position,current_title,previous_title,channel_title\n",
-        f"126,Pantera Floods (live),{changed_title_2},introvertednightmare\n",
-        f"128,Every dog has its day,{changed_title_1},ariel179\n",
+        "position,current_title,previous_title,channel_title,url\n",
+        f"126,Pantera Floods (live),{changed_title_2},introvertednightmare,{utils.get_url("HTwA4mXJKsk")}\n",
+        f"128,Every dog has its day,{changed_title_1},ariel179,{utils.get_url("gLnt9RP48j4")}\n",
     ]
     data = _read_file_lines(os.path.join(tempdir, data_file))
     assert len(data) == 130
